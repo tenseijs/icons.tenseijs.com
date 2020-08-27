@@ -95,7 +95,7 @@ export default {
   'music-note': ['song'],
   'paper-clip': ['document'],
   'pencil-alt': ['write', 'note', 'edit'],
-  pencil: ['write', 'note'],
+  pencil: ['write', 'note', 'edit'],
   photograph: ['picture', 'image', 'gallery'],
   'plus-circle': ['add', 'create'],
   'plus-sm': ['add', 'create'],
