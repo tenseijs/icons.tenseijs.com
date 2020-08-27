@@ -81,6 +81,8 @@ export default {
   minus: ['remove', 'delete'],
   moon: ['night'],
   'paper-clip': ['document'],
+  pencil: ['edit'],
+  'pencil-alt': ['edit'],
   photograph: ['picture', 'image'],
   'plus-circle': ['add', 'create'],
   'plus-sm': ['add', 'create'],
