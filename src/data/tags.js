@@ -118,6 +118,8 @@ export default {
   speakerphone: ['megaphone'],
   sun: ['day', 'brightness', 'light'],
   support: ['help'],
+  'switch-horizontal': ['arrows'],
+  'switch-vertical': ['arrows'],
   table: ['grid'],
   terminal: ['console', 'cli', 'code'],
   trash: ['bin', 'rubbish', 'delete', 'remove', 'garbage'],
