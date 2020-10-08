@@ -6,6 +6,9 @@ module.exports = {
     uniformColorPalette: true,
     extendedSpacingScale: true,
   },
+  future: {
+    removeDeprecatedGapUtilities: true,
+  },
   purge: {
     mode: 'all',
     content: ['src/**/*.js'],
