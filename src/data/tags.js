@@ -109,7 +109,7 @@ export default {
   scale: ['balance', 'weigh'],
   scissors: ['cut'],
   'search-circle': ['magnifier'],
-  search: ['magnifier'],
+  search: ['magnifier', 'magnifying glass'],
   selector: ['reorder', 'move'],
   'shield-check': ['shield-tick', 'secure'],
   'shield-exclamation': ['shield-warning'],
