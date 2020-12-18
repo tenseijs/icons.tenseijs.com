@@ -38,7 +38,7 @@ class Document extends NextDocument {
   render() {
     return (
       <Html lang="en">
-        <InlineStylesHead />
+        <Head />
         <body className="bg-gray-50 font-sans antialiased text-gray-500">
           <Main />
           <NextScript />
