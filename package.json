@@ -8,8 +8,9 @@
   },
   "dependencies": {
     "@reach/alert": "^0.11.0",
+    "@tailwindcss/jit": "^0.0.0-87def1987",
     "@tailwindui/react": "^0.1.1",
-    "autoprefixer": "^10.1.0",
+    "autoprefixer": "^10.2.5",
     "clsx": "^1.1.1",
     "file-loader": "^6.0.0",
     "heroicons": "^0.4.2",
