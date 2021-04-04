@@ -6,6 +6,7 @@ import tags from '../data/tags'
 import Alert from '@reach/alert'
 import { Transition } from '@tailwindui/react'
 import Head from 'next/head'
+import { TwitterPicker } from 'react-color'
 
 const ENTER = 13
 const UP = 38
@@ -14,8 +15,8 @@ const SPACE = 32
 const ESC = 27
 
 const SHARE_LINK = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-  'Check out Heroicons by @steveschoger and the @tailwindcss team 😍'
-)}&url=${encodeURIComponent('https://heroicons.com')}`
+  'Check out Tensei icons by @bahdcoder and the @tenseijs team 😍'
+)}&url=${encodeURIComponent('https://icons.tenseijs.com')}`
 
 function importIcons(r, type, attrs) {
   return r.keys().map((fileName) => {
@@ -30,20 +31,15 @@ function importIcons(r, type, attrs) {
   })
 }
 
-const iconsMedium = importIcons(require.context(`heroicons/outline/`, false, /\.svg$/), 'md', {
-  width: 24,
-  height: 24,
+const icons = importIcons(require.context('@tensei/icons/icons', false, /\.svg$/), 'md', {
+  width: 36,
+  height: 36,
   fill: 'none',
   viewBox: '0 0 24 24',
   stroke: 'currentColor',
 })
-const iconsSmall = importIcons(require.context(`heroicons/solid/`, false, /\.svg$/), 'sm', {
-  width: 20,
-  height: 20,
-  viewBox: '0 0 20 20',
-  fill: 'currentColor',
-})
-const iconCount = iconsMedium.length
+
+const iconCount = icons.length
 
 const useStore = createStore((set) => ({
   query: '',
@@ -52,7 +48,7 @@ const useStore = createStore((set) => ({
     set({
       query,
       filter: query
-        ? matchSorter(iconsMedium, query, { keys: ['name', 'tags'] }).map((x) => x.name)
+        ? matchSorter(icons, query, { keys: ['name', 'tags'] }).map((x) => x.name)
         : undefined,
     })
   },
@@ -136,7 +132,7 @@ function copyIcon(icon, as) {
   return navigator.clipboard.writeText(svg)
 }
 
-const Icon = memo(({ icon }) => {
+const Icon = memo(({ icon, color }) => {
   const [state, setState] = useState('idle')
   const [activeType, setActiveType] = useState(undefined)
 
@@ -234,6 +230,7 @@ const Icon = memo(({ icon }) => {
         >
           <svg
             {...icon.attrs}
+            color={color}
             className={clsx('transform transition-transform', {
               '-translate-y-3 duration-200 ease-out': state === 'copied',
               'duration-500 ease-in-out': state !== 'copied',
@@ -322,7 +319,7 @@ const Icon = memo(({ icon }) => {
   )
 })
 
-function Icons({ icons, className = '', filter }) {
+function Icons({ icons, className = '', filter, color }) {
   const [renderAll, setRenderAll] = useState(false)
 
   useEffect(() => {
@@ -341,7 +338,7 @@ function Icons({ icons, className = '', filter }) {
       style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(132px, 1fr))' }}
     >
       {filteredIcons.slice(0, renderAll ? undefined : 38).map((icon, i) => (
-        <Icon key={icon.name} icon={icon} />
+        <Icon key={icon.name} icon={icon} color={color} />
       ))}
     </ul>
   )
@@ -352,19 +349,7 @@ function Header({ version }) {
     <header className="bg-gradient-to-r from-purple-700 to-[#a65fec] px-4 sm:px-6 lg:px-16">
       <div className="max-w-10xl mx-auto divide-y divide-black divide-opacity-10">
         <div className="py-6 flex items-center text-sm leading-5">
-          <svg width="168" height="34" fill="none">
-            <path
-              d="M55.436 12.608c-1.876 0-3.332.7-4.172 1.96V7.4h-3.612V27h3.612v-7.56c0-2.436 1.316-3.472 3.08-3.472 1.624 0 2.772.98 2.772 2.884V27h3.612v-8.596c0-3.724-2.324-5.796-5.292-5.796zm10.868 8.876H76.86c.084-.476.14-.952.14-1.484 0-4.116-2.94-7.392-7.084-7.392-4.396 0-7.392 3.22-7.392 7.392 0 4.172 2.968 7.392 7.672 7.392 2.688 0 4.788-1.092 6.104-2.996l-2.912-1.68c-.616.812-1.736 1.4-3.136 1.4-1.904 0-3.444-.784-3.948-2.632zm-.056-2.8c.42-1.792 1.736-2.828 3.668-2.828 1.512 0 3.024.812 3.472 2.828h-7.14zm16.326-3.276V13h-3.612v14h3.612v-6.692c0-2.94 2.38-3.78 4.256-3.556V12.72c-1.764 0-3.528.784-4.256 2.688zm11.953 11.984c4.116 0 7.42-3.22 7.42-7.392 0-4.172-3.304-7.392-7.42-7.392s-7.392 3.22-7.392 7.392c0 4.172 3.276 7.392 7.392 7.392zm0-3.528c-2.128 0-3.78-1.596-3.78-3.864s1.652-3.864 3.78-3.864c2.156 0 3.808 1.596 3.808 3.864s-1.652 3.864-3.808 3.864zM105.72 11.32c1.232 0 2.24-1.008 2.24-2.212 0-1.204-1.008-2.24-2.24-2.24-1.204 0-2.212 1.036-2.212 2.24a2.235 2.235 0 002.212 2.212zM103.928 27h3.612V13h-3.612v14zm13.022.392c2.744 0 5.124-1.456 6.328-3.64l-3.136-1.792c-.56 1.148-1.764 1.848-3.22 1.848-2.156 0-3.752-1.596-3.752-3.808 0-2.24 1.596-3.836 3.752-3.836 1.428 0 2.632.728 3.192 1.876l3.108-1.82c-1.148-2.156-3.528-3.612-6.272-3.612-4.256 0-7.392 3.22-7.392 7.392 0 4.172 3.136 7.392 7.392 7.392zm14.123 0c4.116 0 7.42-3.22 7.42-7.392 0-4.172-3.304-7.392-7.42-7.392s-7.392 3.22-7.392 7.392c0 4.172 3.276 7.392 7.392 7.392zm0-3.528c-2.128 0-3.78-1.596-3.78-3.864s1.652-3.864 3.78-3.864c2.156 0 3.808 1.596 3.808 3.864s-1.652 3.864-3.808 3.864zm17.185-11.256c-1.876 0-3.332.7-4.172 1.96V13h-3.612v14h3.612v-7.56c0-2.436 1.316-3.472 3.08-3.472 1.624 0 2.772.98 2.772 2.884V27h3.612v-8.596c0-3.724-2.324-5.796-5.292-5.796zm11.148 4.368c0-.756.728-1.148 1.624-1.148 1.036 0 1.82.532 2.24 1.428l3.08-1.68c-1.092-1.932-3.052-2.968-5.32-2.968-2.884 0-5.32 1.596-5.32 4.452 0 4.928 7.224 3.808 7.224 5.852 0 .812-.784 1.204-1.932 1.204-1.4 0-2.352-.672-2.744-1.82l-3.136 1.764c1.008 2.156 3.08 3.332 5.88 3.332 2.996 0 5.628-1.456 5.628-4.48 0-5.152-7.224-3.864-7.224-5.936z"
-              fill="#fff"
-            />
-            <path
-              d="M16 4.542a23.234 23.234 0 0013.713 4.83c.189 1.083.287 2.198.287 3.338 0 8.825-5.915 16.274-14 18.589C7.915 28.984 2 21.535 2 12.71c0-1.14.098-2.256.287-3.34A23.234 23.234 0 0016 4.543z"
-              stroke="#AC94FA"
-              strokeWidth="4"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <img src={require('../img/logo.png').default} width='168' height='34px' alt="tensei logo"  />
           <div className="flex space-x-10 ml-auto">
             <a
               href={SHARE_LINK}
@@ -378,12 +363,12 @@ function Header({ version }) {
               </p>
             </a>
             <a
-              href="https://classic.heroicons.com"
+              href="https://github.com/tailwindlabs/heroicons.com"
               className="hidden md:block group text-purple-200"
             >
-              Looking for Heroicons Classic?{' '}
-              <strong className="font-semibold text-white group-hover:text-purple-200 transition-colors duration-150">
-                Get them here &rarr;
+              Site forked from
+              <strong className="font-semibold text-white group-hover:text-purple-200 transition-colors duration-150 ml-1">
+                Tailwindlabs &rarr;
               </strong>
             </a>
           </div>
@@ -391,9 +376,9 @@ function Header({ version }) {
         <div className="sm:pt-4 pb-10 sm:pb-14 flex flex-wrap items-center">
           <div className="w-full flex-none text-center xl:w-auto xl:flex-auto xl:text-left mt-10">
             <h1 className="font-display text-white text-3xl leading-9 font-semibold sm:text-4xl sm:leading-10">
-              Beautiful hand-crafted SVG icons,{' '}
+              Beautiful duo-tone SVG icons,{' '}
               <span className="sm:block text-purple-300">
-                by the makers of <a href="https://tailwindcss.com">Tailwind CSS</a>.
+                by the makers of <a href="https://tenseijs.com">Tensei.js</a>
               </span>
             </h1>
             <div className="flex flex-wrap justify-center xl:justify-start whitespace-no-wrap text-purple-100 font-medium mt-3 leading-5">
@@ -413,7 +398,7 @@ function Header({ version }) {
                     />
                   </svg>
                 </div>
-                <div>{iconsMedium.length} Icons</div>
+                <div>{icons.length} Icons</div>
               </div>
               <div className="flex items-center mx-3 sm:mx-4 xl:ml-0 xl:mr-8 mt-3">
                 <div className="mr-2">
@@ -455,7 +440,7 @@ function Header({ version }) {
           </div>
           <div className="w-full sm:w-auto flex-none flex flex-col-reverse sm:flex-row sm:items-start space-y-3 space-y-reverse sm:space-y-0 sm:space-x-4 mt-10 mx-auto xl:mx-0">
             <div>
-              <a href={`https://github.com/tailwindlabs/heroicons`} className="group flex">
+              <a href={`https://github.com/tenseijs/icons`} className="group flex">
                 <div className="w-full sm:w-auto inline-flex items-center justify-center text-purple-900 group-hover:text-purple-500 font-medium leading-none bg-white rounded-lg shadow-sm group-hover:shadow-lg py-3 px-5 border border-transparent transform group-hover:-translate-y-0.5 transition-all duration-150">
                   <svg
                     width="24"
@@ -473,26 +458,6 @@ function Header({ version }) {
                 </div>
               </a>
             </div>
-            <a
-              href="https://www.figma.com/community/file/958423903283802665/heroiconsZ"
-              className="group flex"
-            >
-              <div className="w-full sm:w-auto inline-flex items-center justify-center text-white font-medium bg-white bg-opacity-20 group-hover:bg-opacity-30 rounded-lg shadow-sm group-hover:shadow-lg py-3 px-5 border border-white border-opacity-10 transform group-hover:-translate-y-0.5 transition-all duration-150">
-                <svg
-                  width="24"
-                  height="24"
-                  fill="currentColor"
-                  className="text-white mr-3 text-opacity-75 transform"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M5.037 5.785a3.747 3.747 0 013.748-3.748h6.43a3.747 3.747 0 012.056 6.882 3.747 3.747 0 01-2.056 6.881h-.08c-.971 0-1.856-.37-2.521-.975v3.454c0 2.097-1.722 3.788-3.81 3.788-2.064 0-3.767-1.672-3.767-3.747 0-1.31.673-2.464 1.692-3.134a3.744 3.744 0 01-1.692-3.134c0-1.31.673-2.464 1.692-3.133a3.744 3.744 0 01-1.692-3.134zm6.349 3.747v5.04H8.767a2.52 2.52 0 01.018-5.04h2.6zM8.785 15.8h-.018a2.52 2.52 0 00-2.502 2.52c0 1.386 1.143 2.52 2.54 2.52 1.42 0 2.58-1.152 2.58-2.56V15.8h-2.6zm0-12.535a2.52 2.52 0 100 5.04h2.6v-5.04h-2.6zm3.83 0v5.04h2.6a2.52 2.52 0 000-5.04h-2.6zm0 8.787a2.52 2.52 0 012.52-2.52h.08a2.52 2.52 0 010 5.04h-.08a2.52 2.52 0 01-2.52-2.52z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Get Figma File</span>
-              </div>
-            </a>
           </div>
         </div>
       </div>
@@ -506,43 +471,20 @@ function Footer() {
       <div className="max-w-10xl mx-auto text-center space-y-6 md:space-y-0 md:text-left md:flex">
         <div className="space-y-6 md:space-y-0 md:space-x-10 flex flex-col items-center md:flex-row">
           <div className="flex items-center space-x-2">
-            <svg width="30" height="18" fill="#16BDCA">
-              <path
-                fillRule="evenodd"
-                clipRule="evenodd"
-                d="M15 0c-4 0-6.5 2-7.5 6 1.5-2 3.25-2.75 5.25-2.25 1.141.285 1.957 1.113 2.86 2.03C17.08 7.271 18.782 9 22.5 9c4 0 6.5-2 7.5-6-1.5 2-3.25 2.75-5.25 2.25-1.141-.285-1.957-1.113-2.86-2.03C20.42 1.728 18.718 0 15 0zM7.5 9C3.5 9 1 11 0 15c1.5-2 3.25-2.75 5.25-2.25 1.141.285 1.957 1.113 2.86 2.03C9.58 16.271 11.282 18 15 18c4 0 6.5-2 7.5-6-1.5 2-3.25 2.75-5.25 2.25-1.141-.285-1.957-1.113-2.86-2.03C12.92 10.729 11.218 9 7.5 9z"
-              />
-            </svg>
             <p>
               By the makers of{' '}
               <a
-                href="https://tailwindcss.com"
+                href="https://tenseijs.com"
                 className="font-medium text-gray-900 hover:text-gray-500 transition-colors duration-150"
               >
-                tailwindcss
+                @tenseijs
               </a>
             </p>
           </div>
           <div className="flex items-center space-x-2">
             <div className="relative rounded-full overflow-hidden">
-              <img
-                src={require('../img/steve.jpg').default}
-                alt=""
-                className="bg-gray-200"
-                style={{ width: 30, height: 30 }}
-                loading="lazy"
-              />
               <div className="absolute inset-0 rounded-full border border-black border-opacity-10" />
             </div>
-            <p>
-              Designed by{' '}
-              <a
-                href="https://twitter.com/steveschoger"
-                className="font-medium text-gray-900 hover:text-gray-500 transition-colors duration-150"
-              >
-                @steveschoger
-              </a>
-            </p>
           </div>
         </div>
         <a
@@ -601,7 +543,7 @@ function Search() {
     >
       <div className="max-w-10xl mx-auto flex">
         <label htmlFor="search-input" className="flex-none pr-3 flex items-center">
-          <span className="sr-only">Search all {iconsMedium.length} icons</span>
+          <span className="sr-only">Search all {icons.length} icons</span>
           <svg
             width="24"
             height="24"
@@ -624,7 +566,7 @@ function Search() {
           ref={searchInputRef}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder={`Search all ${iconsMedium.length} icons (Press “/” to focus)`}
+          placeholder={`Search all ${icons.length} icons (Press “/” to focus)`}
           className="flex-auto py-6 text-base leading-6 text-gray-500 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400"
         />
       </div>
@@ -632,7 +574,7 @@ function Search() {
   )
 }
 
-function IconsContainer() {
+function IconsContainer({ color }) {
   const filter = useStore((state) => state.filter)
   const query = useStore((state) => state.query)
 
@@ -667,7 +609,7 @@ function IconsContainer() {
         <p>
           If you have a request for an icon you can{' '}
           <a
-            href={`https://github.com/tailwindlabs/heroicons/issues/new?title=${query}+icon&labels=icon+request`}
+            href={`https://github.com/tenseijs/tensei/issues/new?title=${query}+icon&labels=icon+request`}
             className="text-purple-600 border-b-2 border-purple-100 hover:bg-purple-50 transition-colors duration-150"
           >
             open a new GitHub issue
@@ -680,93 +622,69 @@ function IconsContainer() {
 
   return (
     <div
-      className="relative grid grid-cols-2 items-start gap-x-8 sm:gap-x-12 lg:gap-x-16 gap-y-4 sm:gap-y-8 max-w-10xl mx-auto pt-6 sm:pt-8 pb-12"
+      className="relative grid items-start gap-x-8 sm:gap-x-12 lg:gap-x-16 max-w-10xl mx-auto pt-6 sm:pt-8 pb-12"
       style={{ gridTemplateRows: 'auto auto' }}
     >
       <section className="contents">
-        <header className="col-start-1 row-start-1 flex flex-wrap items-baseline">
-          <h2 className="flex-none text-lg leading-6 font-medium text-gray-900 mr-3">Outline</h2>
-          <p className="hidden sm:block flex-auto text-gray-400 text-sm leading-5 font-medium">
-            2px stroke weight, 24x24 bounding box
-          </p>
-          <p className="hidden sm:block flex-none w-full text-sm leading-5 mt-3">
-            For primary navigation and marketing sections, designed to be rendered at 24x24.
-          </p>
-        </header>
-        <Icons icons={iconsMedium} filter={filter} className="col-start-1 row-start-2" />
+        <Icons color={color} icons={icons} filter={filter} className="col-start-1 row-start-2" />
       </section>
-      <section className="contents">
-        <header className="col-start-2 row-start-1 flex flex-wrap items-baseline">
-          <h2 className="flex-none text-lg leading-6 font-medium text-gray-900 mr-3">Solid</h2>
-          <p className="hidden sm:block flex-auto text-gray-400 text-sm leading-5 font-medium">
-            Solid fill, 20x20 bounding box
-          </p>
-          <p className="hidden sm:block flex-none w-full text-sm leading-5 mt-3">
-            For buttons, form elements, and to support text, designed to be rendered at 20x20.
-          </p>
-        </header>
-        <Icons icons={iconsSmall} filter={filter} className="col-start-2 row-start-2" />
-      </section>
-      <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-200" />
+
     </div>
   )
 }
 
 export default function Home({ version }) {
+  const [color, setColor] = useState('#6D28D9')
+
   return (
     <>
       <Head>
-        <link
-          rel="apple-touch-icon"
-          sizes="180x180"
-          href={require('../img/apple-touch-icon.png').default}
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href={require('../img/favicon-32x32.png').default}
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href={require('../img/favicon-16x16.png').default}
-        />
+        <link rel="apple-touch-icon" sizes="180x180" href={require('../img/apple-touch-icon.png').default} />
+        <link rel="icon" type="image/png" sizes="32x32" href={require('../img/favicon-32x32.png').default} />
+        <link rel="icon" type="image/png" sizes="16x16" href={require('../img/favicon-16x16.png').default} />
         <meta
-          content="Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS."
+          content="Beautiful duo-tone SVG icons, by the makers of Tensei.js."
           name="description"
         />
-        <meta property="og:url" content="https://heroicons.com" />
+        
+        <meta property="og:url" content="https://icons.tenseijs.com" />
         <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Heroicons" />
+        <meta property="og:site_name" content="Tensei icons" />
         <meta
           property="og:description"
-          content="Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS."
+          content="Beautiful duo-tone SVG icons, by the makers of Tensei.js."
         />
-        <title>Heroicons</title>
-        <meta property="og:title" content="Heroicons" />
+        <title>Tensei icons</title>
+        <meta property="og:title" content="Tensei icons" />
         <meta
           property="og:image"
-          content={`https://heroicons.com${require('../img/social-card.jpg').default}`}
+          content={`https://icons.tenseijs.com${require('../img/social-card.png').default}`}
         />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:site" content="@tailwindlabs" />
-        <meta name="twitter:title" content="Heroicons" />
+        <meta name="twitter:site" content="@tenseijs" />
+        <meta name="twitter:title" content="Tensei icons" />
         <meta
           name="twitter:description"
-          content="Beautiful hand-crafted SVG icons, by the makers of Tailwind CSS."
+          content="Beautiful duo-tone SVG icons, by the makers of Tensei.js."
         />
         <meta
           name="twitter:image"
-          content={`https://heroicons.com${require('../img/social-card.jpg').default}`}
+          content={`https://icons.tenseijs.com${require('../img/social-card.png').default}`}
         />
       </Head>
       <Header version={version} />
       <main className="bg-white">
         <Search />
         <div className="px-4 sm:px-6 lg:px-16">
-          <IconsContainer />
+          <div className="flex mt-8">
+            <TwitterPicker
+              color={color}
+              triangle='hide'
+              colors={['#6D28D9', '#2346f8', '#28666E', '#083D77', '#52154E', '#C1666B', '#033F63', '#551B14', '#B59DA4', '#D55672', '#60AFFF', '#3066BE', '#001F54', '#60AB9A', '#694873', '#416788', '#533B4D']}
+              onChange={({ hex }) => setColor(hex)}
+            />
+          </div>
+          <IconsContainer color={color} />
         </div>
       </main>
       <Footer />
